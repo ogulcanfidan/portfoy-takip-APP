@@ -311,6 +311,7 @@
   .watch-tag.auto{ background: rgba(99,102,241,.18); color:#A5B4FC; }
   .watch-tag.manual{ background: rgba(20,184,166,.18); color:#5EEAD4; }
   .watch-tag.hit{ background: rgba(240,185,11,.2); color: var(--gold); }
+  .watch-tag.muted{ background: rgba(148,163,184,.18); color: var(--text-dim); }
   .watch-item-alert{ flex-basis:100%; display:flex; align-items:center; gap:5px; font-size:12px; font-weight:700; color: var(--gold); margin-top:2px; }
   .watch-empty{ text-align:center; padding:20px; color:var(--text-dim); font-size:12.5px; }
 
@@ -521,8 +522,10 @@
       <button class="btn-ghost" id="enableNotifBtn">Bildirimleri Etkinleştir</button>
     </div>
     <p class="watch-desc">
-      Kârla kapattığın işlemlerin giriş fiyatına geri dönen coinler otomatik burada listelenir
-      (±%0.5 tolerans). İstersen henüz işlem açmadığın bir coin için de manuel hedef fiyat ekleyebilirsin.
+      Bugüne kadar açtığın her işlemin giriş fiyatı otomatik burada listelenir — aynı coinde
+      birden fazla işlem varsa en iyi giriş fiyatlı olan gösterilir (±%0.5 tolerans). "Yoksay"
+      sadece o coin için bildirimi kapatır, listeden silmez. İstersen henüz işlem açmadığın bir
+      coin için de manuel hedef fiyat ekleyebilirsin.
     </p>
     <div class="watch-add-row">
       <input type="text" id="watchCoinInput" placeholder="Coin (örn. BTC)">
@@ -1925,31 +1928,33 @@ function saveManualWatches(){ localStorage.setItem(MANUAL_WATCH_KEY, JSON.string
 function saveDismissedAuto(){ localStorage.setItem(DISMISSED_AUTO_KEY, JSON.stringify(dismissedAuto)); }
 function saveNotifiedKeys(){ localStorage.setItem(NOTIFIED_KEY, JSON.stringify(notifiedKeys)); }
 
-/* Kârla kapanmış her işlemin giriş fiyatını "tekrar giriş" hedefi olarak alır.
-   Aynı coin+yön için birden fazla kârlı işlem varsa artık HEPSİ ayrı
-   ayrı listelenmiyor: LONG'lar için en DÜŞÜK giriş fiyatlı işlem, SHORT'lar için
-   en YÜKSEK giriş fiyatlı işlem tek başına seçiliyor (en iyi tekrar giriş seviyesi). */
+/* Bugüne kadar açılmış her işlemin giriş fiyatını "tekrar giriş" hedefi olarak
+   alır — açık/kapalı, kârlı/zararlı fark etmez. Aynı coin+yön için birden
+   fazla işlem varsa HEPSİ ayrı ayrı listelenmiyor: LONG'lar için en DÜŞÜK
+   giriş fiyatlı işlem, SHORT'lar için en YÜKSEK giriş fiyatlı işlem tek
+   başına seçiliyor (en iyi tekrar giriş seviyesi).
+   "Yoksay" artık bir öğeyi listeden tamamen silmiyor — sadece o öğe için
+   tarayıcı bildirimini susturuyor (dismissedAuto = "sessize alınanlar"),
+   öğe listede kalmaya devam ediyor. */
 function getAutoWatchTargets(){
   const best = new Map(); // coin::yön -> en iyi giriş
   trades.forEach(t => {
-    if(t.durum === 'Kapalı' && t.pnl !== null && t.pnl > 0){
-      const coin = t.coin.toUpperCase().trim();
-      const groupKey = coin + '::' + t.yon;
-      const existing = best.get(groupKey);
-      const isBetter = !existing
-        || (t.yon === 'Long' && t.giris < existing.giris)
-        || (t.yon === 'Short' && t.giris > existing.giris);
-      if(isBetter){
-        best.set(groupKey, { coin, yon: t.yon, giris: t.giris });
-      }
+    if(t.giris === null || t.giris === undefined || isNaN(t.giris)) return;
+    const coin = t.coin.toUpperCase().trim();
+    const groupKey = coin + '::' + t.yon;
+    const existing = best.get(groupKey);
+    const isBetter = !existing
+      || (t.yon === 'Long' && t.giris < existing.giris)
+      || (t.yon === 'Short' && t.giris > existing.giris);
+    if(isBetter){
+      best.set(groupKey, { coin, yon: t.yon, giris: t.giris });
     }
   });
 
   const result = [];
   best.forEach(({ coin, yon, giris }) => {
     const key = coin + '::' + yon + '::' + giris;
-    if(dismissedAuto.includes(key)) return;
-    result.push({ key, coin, target: giris, yon, source: 'auto' });
+    result.push({ key, coin, target: giris, yon, source: 'auto', muted: dismissedAuto.includes(key) });
   });
   return result;
 }
@@ -2029,13 +2034,13 @@ function renderWatchList(){
     if(isTriggered){
       triggeredCount++;
       stillNotified.push(item.key);
-      if(!notifiedKeys.includes(item.key)) fireWatchNotification(item, price);
+      if(!notifiedKeys.includes(item.key) && !item.muted) fireWatchNotification(item, price);
     } else {
       pendingCount++;
     }
 
     const metaText = item.source === 'auto'
-      ? `Otomatik · ${item.yon} girişten kâr aldın · Hedef: ${fmtPrice(item.target)}`
+      ? `Otomatik · ${item.yon} pozisyon girişi · Hedef: ${fmtPrice(item.target)}`
       : `Manuel${item.note ? ' · ' + item.note : ''} · Hedef: ${fmtPrice(item.target)}`;
 
     const diffColor = isTriggered ? 'var(--gold)' : (diffPct === null ? 'var(--text-dim)' : (diffPct > 0 ? 'var(--long)' : 'var(--short)'));
@@ -2045,7 +2050,7 @@ function renderWatchList(){
 
     const removeBtn = item.source === 'manual'
       ? `<button class="btn-danger-ghost" onclick="removeManualWatch('${item.id}')">Sil</button>`
-      : `<button class="btn-edit-ghost" onclick="dismissAutoWatch('${item.key.replace(/'/g, "\\'")}')">Yoksay</button>`;
+      : `<button class="btn-edit-ghost" onclick="toggleAutoWatchMute('${item.key.replace(/'/g, "\\'")}')">${item.muted ? 'Bildirimi Aç' : 'Yoksay'}</button>`;
 
     const row = document.createElement('div');
     row.className = 'watch-item' + (isTriggered ? ' triggered' : '');
@@ -2055,6 +2060,7 @@ function renderWatchList(){
           ${item.coin}
           <span class="watch-tag ${item.source === 'auto' ? 'auto' : 'manual'}">${item.source === 'auto' ? 'OTOMATİK' : 'MANUEL'}</span>
           ${isTriggered ? '<span class="watch-tag hit">HEDEFE ULAŞTI</span>' : ''}
+          ${item.muted ? '<span class="watch-tag muted">BİLDİRİM KAPALI</span>' : ''}
         </span>
         <span class="watch-item-meta">${metaText}</span>
       </div>
@@ -2133,8 +2139,14 @@ function removeManualWatch(id){
   renderWatchList();
 }
 
-function dismissAutoWatch(key){
-  dismissedAuto.push(key);
+/* Bir öğeyi listeden SİLMEZ — sadece o öğe için tarayıcı bildirimini
+   açar/kapatır (toggle). Öğe her durumda izleme listesinde kalmaya devam eder. */
+function toggleAutoWatchMute(key){
+  if(dismissedAuto.includes(key)){
+    dismissedAuto = dismissedAuto.filter(k => k !== key);
+  } else {
+    dismissedAuto.push(key);
+  }
   saveDismissedAuto();
   renderWatchList();
 }
