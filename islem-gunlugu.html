@@ -49,10 +49,12 @@
   .gold-dot{ color: var(--gold); }
 
   /* Balance widget */
-  .balance-row{ display:flex; justify-content:flex-end; align-items:stretch; gap:12px; margin: -10px 0 20px; flex-wrap:wrap; }
+  .balance-rows{ display:flex; flex-direction:column; gap:12px; margin: -10px 0 20px; }
+  .balance-row{ display:flex; justify-content:flex-start; align-items:stretch; gap:12px; flex-wrap:wrap; }
   .balance-card{
     background: var(--surface); border:1px solid var(--border); border-radius: var(--radius);
-    padding: 14px 18px; min-width: 220px; text-align:right; position:relative;
+    padding: 14px 18px; min-width: 160px; text-align:right; position:relative;
+    flex: 1 1 0;
   }
   .balance-card .label-row{ display:flex; align-items:center; justify-content:flex-end; gap:6px; margin-bottom:6px; }
   .balance-card .label{ font-size:12px; color:var(--text-dim); }
@@ -90,14 +92,9 @@
   .storage-actions button{ padding:6px 12px; font-size:12.5px; }
 
   /* Stat cards */
-  .stats{
-    display:grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 8px;
-  }
-  @media (max-width: 900px){ .stats{ grid-template-columns: repeat(3,1fr);} }
-  @media (max-width: 560px){ .stats{ grid-template-columns: repeat(2,1fr);} }
   .stat{
     background: var(--surface); border:1px solid var(--border); border-radius: var(--radius);
-    padding: 14px 16px;
+    padding: 14px 16px; flex: 1 1 0; min-width: 140px;
   }
   .stat .label{ font-size:12px; color:var(--text-dim); margin-bottom:8px; }
   .stat .value{ font-size:20px; font-weight:600; }
@@ -142,7 +139,8 @@
   .calendar-btn{
     background: var(--surface); border-radius: var(--radius);
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
-    padding: 14px 18px; min-width: 220px;
+    padding: 14px 18px; min-width: 160px;
+    flex: 1 1 0;
   }
   .calendar-btn-label{ font-size:12.5px; font-weight:600; white-space:nowrap; }
   .calendar-btn-icon{ font-size:40px; line-height:1; }
@@ -316,15 +314,49 @@
   .watch-empty{ text-align:center; padding:20px; color:var(--text-dim); font-size:12.5px; }
 
   /* Equity Curve */
-  .equity-card{ background: var(--surface); border:1px solid var(--border); border-radius: var(--radius); padding:18px; margin-bottom:20px; }
+  .equity-card{ background: var(--surface); border:1px solid var(--border); border-radius: var(--radius); padding:18px; margin-bottom:10px; }
   .equity-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:6px; }
   .equity-header h2{ margin:0; font-size:15px; font-weight:600; }
+  .equity-header-left{ display:flex; align-items:center; gap:10px; }
+  .card-toggle-btn{ padding:4px 10px; font-size:11.5px; }
+  .equity-header-right{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .equity-interval-wrap{ display:flex; flex-direction:column; gap:6px; margin-bottom:12px; }
+  .equity-interval-group{ display:flex; flex-wrap:wrap; gap:2px; background: var(--surface-2); border:1px solid var(--border); border-radius:8px; padding:3px; }
+  .equity-interval-btn{ background:transparent; border:none; color:var(--text-dim); font-size:11px; font-weight:700; padding:5px 9px; border-radius:6px; cursor:pointer; font-family:'JetBrains Mono', monospace; }
+  .equity-interval-btn:hover{ color:var(--text); }
+  .equity-interval-btn.active{ background: var(--gold); color:#1E1E1E; }
+  .equity-interval-more-btn{ background:transparent; border:none; color:var(--text-dim); font-size:11px; font-weight:700; padding:5px 8px; border-radius:6px; cursor:pointer; font-family: inherit; }
+  .equity-interval-more-btn:hover{ color:var(--gold); }
   .equity-range{ font-size:11.5px; color:var(--text-dim); }
   .equity-empty{ text-align:center; padding:30px 10px; color:var(--text-dim); font-size:12.5px; }
   #equityChartContainer svg{ width:100%; height:auto; display:block; }
   .equity-grid-line{ stroke: var(--border); stroke-width:1; }
   .equity-baseline{ stroke: var(--text-dim); stroke-width:1; stroke-dasharray:4 4; }
   .equity-axis-label{ fill: var(--text-dim); font-size:10px; font-family:'JetBrains Mono', monospace; }
+
+  /* Coin Performansı */
+  .coinperf-card{ background: var(--surface); border:1px solid var(--border); border-radius: var(--radius); padding:16px 18px; margin-bottom:20px; }
+  .coinperf-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; flex-wrap:wrap; gap:6px; }
+  .coinperf-header h2{ margin:0; font-size:14px; font-weight:600; }
+  .coinperf-header-left{ display:flex; align-items:center; gap:10px; }
+  .coinperf-sub{ font-size:11px; color:var(--text-dim); }
+  .coinperf-empty{ text-align:center; padding:24px 10px; color:var(--text-dim); font-size:12px; }
+  .coinperf-toolbar{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--border); }
+  .coinperf-toolbar-group{ display:flex; align-items:center; gap:7px; }
+  .coinperf-toolbar-label{ font-size:10px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.04em; }
+  .coinperf-row{ display:grid; grid-template-columns: 68px 1fr auto; align-items:center; column-gap:10px; row-gap:3px; padding:6px 0; border-bottom:1px solid var(--border); }
+  .coinperf-row:last-child{ border-bottom:none; }
+  .coinperf-name{ font-weight:700; font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .coinperf-count{ font-size:10px; color:var(--text-dim); text-align:left; }
+  .coinperf-net{ font-family:'JetBrains Mono', monospace; font-weight:700; font-size:12px; text-align:right; white-space:nowrap; }
+  .coinperf-net.pos{ color: var(--long); }
+  .coinperf-net.neg{ color: var(--short); }
+  .coinperf-net.zero{ color: var(--text-dim); }
+  .coinperf-bar-track{ grid-column: 1 / -1; height:4px; border-radius:2px; overflow:hidden; background: var(--surface-2); }
+  .coinperf-bar-fill{ height:100%; border-radius:2px; }
+  .coinperf-bar-fill.pos{ background: var(--long); }
+  .coinperf-bar-fill.neg{ background: var(--short); }
+  .coinperf-bar-fill.zero{ background: var(--text-dim); }
 
   /* Coin Eşleştirme düzeltme paneli */
   .coin-match-row{
@@ -378,67 +410,127 @@
     </div>
   </div>
 
-  <div class="balance-row">
-    <button class="btn-outline calendar-btn" id="openCalendarBtn">
-      <span class="calendar-btn-label">Günlük K/Z Takvimi</span>
-      <span class="calendar-btn-icon">📅</span>
-    </button>
-    <div class="balance-card" id="balanceCard">
-      <div class="label-row">
-        <span class="label">Anlık Bakiye</span>
+  <div class="balance-rows">
+    <div class="balance-row">
+      <button class="btn-outline calendar-btn" id="openCalendarBtn">
+        <span class="calendar-btn-label">Günlük K/Z Takvimi</span>
+        <span class="calendar-btn-icon">📅</span>
+      </button>
+      <div class="stat">
+        <div class="label">Anlık K/Z (Açık Poz.)</div>
+        <div class="value num" id="statLivePnl">—</div>
       </div>
-      <div class="value num" id="balanceValue">$0.00</div>
-      <div class="change num" id="balanceChange">Başlangıç bakiyesi ayarlanmadı</div>
-    </div>
-    <div class="balance-card" id="totalBalanceCard">
-      <div class="label-row">
-        <span class="label">Toplam Bakiye</span>
-        <button class="edit-icon" id="editBalanceBtn" title="Başlangıç bakiyesini ayarla">✎</button>
+      <div class="balance-card" id="balanceCard">
+        <div class="label-row">
+          <span class="label">Anlık Bakiye</span>
+        </div>
+        <div class="value num" id="balanceValue">$0.00</div>
+        <div class="change num" id="balanceChange">Başlangıç bakiyesi ayarlanmadı</div>
       </div>
-      <div class="value num" id="totalBalanceValue">$0.00</div>
-      <div class="change num" id="totalBalanceChange">Başlangıç bakiyesi ayarlanmadı</div>
+      <div class="balance-card" id="totalBalanceCard">
+        <div class="label-row">
+          <span class="label">Toplam Bakiye</span>
+          <button class="edit-icon" id="editBalanceBtn" title="Başlangıç bakiyesini ayarla">✎</button>
+        </div>
+        <div class="value num" id="totalBalanceValue">$0.00</div>
+        <div class="change num" id="totalBalanceChange">Başlangıç bakiyesi ayarlanmadı</div>
 
-      <div class="balance-edit" id="balanceEditPanel">
-        <label>Başlangıç Bakiyesi ($)</label>
-        <input type="text" inputmode="decimal" id="startBalanceInput" placeholder="Örn. 1000">
-        <div class="row">
-          <button class="btn-ghost" id="cancelBalanceBtn" style="padding:6px 12px; font-size:12px;">Vazgeç</button>
-          <button class="btn-primary" id="saveBalanceBtn" style="padding:6px 12px; font-size:12px;">Kaydet</button>
+        <div class="balance-edit" id="balanceEditPanel">
+          <label>Başlangıç Bakiyesi ($)</label>
+          <input type="text" inputmode="decimal" id="startBalanceInput" placeholder="Örn. 1000">
+          <div class="row">
+            <button class="btn-ghost" id="cancelBalanceBtn" style="padding:6px 12px; font-size:12px;">Vazgeç</button>
+            <button class="btn-primary" id="saveBalanceBtn" style="padding:6px 12px; font-size:12px;">Kaydet</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-
-  <div class="stats">
-    <div class="stat">
-      <div class="label">Toplam İşlem</div>
-      <div class="value" id="statTotal">0</div>
-    </div>
-    <div class="stat">
-      <div class="label">Açık Pozisyon</div>
-      <div class="value" id="statOpen">0</div>
-    </div>
-    <div class="stat">
-      <div class="label">Gerçekleşen K/Z</div>
-      <div class="value num" id="statPnl">$0.00</div>
-    </div>
-    <div class="stat">
-      <div class="label">Anlık K/Z (Açık Poz.)</div>
-      <div class="value num" id="statLivePnl">—</div>
-    </div>
-    <div class="stat">
-      <div class="label">Kazanma Oranı</div>
-      <div class="value" id="statWinrate">—</div>
+    <div class="balance-row">
+      <div class="stat">
+        <div class="label">Toplam İşlem</div>
+        <div class="value" id="statTotal">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">Kazanç / Kayıp: Long-Short</div>
+        <div class="value" id="statWinDirection" style="font-size:14px; line-height:1.5;">—</div>
+      </div>
+      <div class="stat">
+        <div class="label">Açık Pozisyon</div>
+        <div class="value" id="statOpen">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">Kazanma Oranı</div>
+        <div class="value" id="statWinrate">—</div>
+      </div>
+      <div class="stat">
+        <div class="label">Gerçekleşen K/Z</div>
+        <div class="value num" id="statPnl">$0.00</div>
+      </div>
     </div>
   </div>
 
   <div class="equity-card" id="equityCard">
     <div class="equity-header">
-      <h2>📈 Equity Curve</h2>
+      <div class="equity-header-left">
+        <h2>📈 Bakiye Eğrisi</h2>
+        <button type="button" class="btn-ghost card-toggle-btn" id="equityToggleBtn">Göster</button>
+      </div>
       <span class="equity-range" id="equityRange">—</span>
     </div>
-    <div id="equityChartContainer"></div>
-    <div class="equity-empty" id="equityEmptyState" style="display:none;">Equity curve için henüz kapanmış (kâr/zararı gerçekleşmiş) bir işlem yok.</div>
+    <div id="equityBody" style="display:none;">
+      <div class="equity-interval-wrap">
+        <div class="equity-interval-group" id="equityIntervalGroup">
+          <button type="button" class="equity-interval-btn" data-min="15">15dk</button>
+          <button type="button" class="equity-interval-btn" data-min="60">1s</button>
+          <button type="button" class="equity-interval-btn" data-min="240">4s</button>
+          <button type="button" class="equity-interval-btn" data-min="1440">1g</button>
+          <button type="button" class="equity-interval-more-btn" id="equityIntervalMoreBtn">Daha fazla ▾</button>
+        </div>
+        <div class="equity-interval-group equity-interval-extra" id="equityIntervalExtra" style="display:none;">
+          <button type="button" class="equity-interval-btn" data-min="1">1dk</button>
+          <button type="button" class="equity-interval-btn" data-min="5">5dk</button>
+          <button type="button" class="equity-interval-btn" data-min="30">30dk</button>
+          <button type="button" class="equity-interval-btn" data-min="120">2s</button>
+          <button type="button" class="equity-interval-btn" data-min="360">6s</button>
+          <button type="button" class="equity-interval-btn" data-min="480">8s</button>
+          <button type="button" class="equity-interval-btn" data-min="720">12s</button>
+          <button type="button" class="equity-interval-btn" data-min="10080">1hafta</button>
+          <button type="button" class="equity-interval-btn" data-min="43200">1ay</button>
+        </div>
+      </div>
+      <div id="equityChartContainer"></div>
+      <div class="equity-empty" id="equityEmptyState" style="display:none;">Equity curve için henüz kapanmış (kâr/zararı gerçekleşmiş) bir işlem yok.</div>
+    </div>
+  </div>
+
+  <div class="coinperf-card" id="coinPerfCard">
+    <div class="coinperf-header">
+      <div class="coinperf-header-left">
+        <h2>🪙 Coin Performansı</h2>
+        <button type="button" class="btn-ghost card-toggle-btn" id="coinPerfToggleBtn">Göster</button>
+      </div>
+      <span class="coinperf-sub" id="coinPerfSub">—</span>
+    </div>
+    <div id="coinPerfBody" style="display:none;">
+      <div class="coinperf-toolbar">
+        <div class="coinperf-toolbar-group">
+          <span class="coinperf-toolbar-label">Göster</span>
+          <div class="equity-interval-group" id="coinPerfMetricGroup">
+            <button type="button" class="equity-interval-btn" data-metric="usd">$</button>
+            <button type="button" class="equity-interval-btn" data-metric="roi">ROI %</button>
+          </div>
+        </div>
+        <div class="coinperf-toolbar-group">
+          <span class="coinperf-toolbar-label">Sırala</span>
+          <div class="equity-interval-group" id="coinPerfSortGroup">
+            <button type="button" class="equity-interval-btn" data-sort="desc">Yüksekten Aza</button>
+            <button type="button" class="equity-interval-btn" data-sort="asc">Azdan Yükseğe</button>
+          </div>
+        </div>
+      </div>
+      <div id="coinPerfList"></div>
+      <div class="coinperf-empty" id="coinPerfEmptyState" style="display:none;">Henüz kapanmış (kâr/zararı gerçekleşmiş) bir işlem yok.</div>
+    </div>
   </div>
 
   <div class="price-status">
@@ -536,6 +628,12 @@
     <div id="watchTriggeredList"></div>
     <div class="watch-empty" id="watchEmptyState">Henüz hedef fiyata ulaşan coin yok.</div>
     <button class="btn-ghost" id="togglePendingBtn" style="display:none; margin-top:10px; font-size:12px;"></button>
+    <div id="watchSortRow" style="display:none; margin-top:8px;">
+      <select id="watchSortSelect" title="Sıralama">
+        <option value="deviation">Sırala: Yüzde Fark (Büyükten Küçüğe)</option>
+        <option value="deviation_asc">Sırala: Yüzde Fark (Küçükten Büyüğe)</option>
+      </select>
+    </div>
     <div id="watchActiveList" style="display:none; margin-top:10px;"></div>
   </div>
 
@@ -1142,6 +1240,7 @@ function render(){
   updateStats();
   renderCalendar();
   renderEquityCurve();
+  renderCoinPerformance();
   renderWatchList();
 }
 
@@ -1153,6 +1252,14 @@ function updateStats(){
   const totalPnl = closedWithPnl.reduce((sum, t) => sum + t.pnl, 0);
   const wins = closedWithPnl.filter(t => t.pnl > 0).length;
   const winrate = closedWithPnl.length ? ((wins / closedWithPnl.length) * 100).toFixed(1) + '%' : '—';
+  const winsLong = closedWithPnl.filter(t => t.pnl > 0 && t.yon === 'Long').length;
+  const winsShort = closedWithPnl.filter(t => t.pnl > 0 && t.yon === 'Short').length;
+  const lossesLong = closedWithPnl.filter(t => t.pnl < 0 && t.yon === 'Long').length;
+  const lossesShort = closedWithPnl.filter(t => t.pnl < 0 && t.yon === 'Short').length;
+  $('statWinDirection').innerHTML = closedWithPnl.length > 0
+    ? `<div>Kazanç: <span style="color:var(--long)">${winsLong}L</span> / <span style="color:var(--short)">${winsShort}S</span></div>`
+      + `<div>Kayıp: <span style="color:var(--long)">${lossesLong}L</span> / <span style="color:var(--short)">${lossesShort}S</span></div>`
+    : '—';
 
   $('statTotal').textContent = total;
   $('statOpen').textContent = open;
@@ -1597,24 +1704,81 @@ function showDayDetail(dateKey, year, month, day){
 }
 
 /* ---------- Equity Curve ---------- */
-function buildEquitySeries(){
+const EQUITY_INTERVAL_KEY = 'pozisyon_defteri_equity_interval_v1';
+const EQUITY_INTERVALS = [1, 5, 15, 30, 60, 120, 240, 360, 480, 720, 1440, 10080, 43200];
+const EQUITY_DEFAULT_INTERVALS = [15, 60, 240, 1440];
+const EQUITY_INTERVAL_LABELS = {
+  1: '1dk', 5: '5dk', 15: '15dk', 30: '30dk',
+  60: '1s', 120: '2s', 240: '4s', 360: '6s', 480: '8s', 720: '12s',
+  1440: '1g', 10080: '1hafta', 43200: '1ay'
+};
+
+function getEquityIntervalMinutes(){
+  const activeBtn = document.querySelector('#equityBody .equity-interval-btn.active');
+  if(activeBtn) return parseInt(activeBtn.dataset.min, 10) || 60;
+  const stored = parseInt(localStorage.getItem(EQUITY_INTERVAL_KEY), 10);
+  return EQUITY_INTERVALS.includes(stored) ? stored : 60;
+}
+
+/* Kapanan işlemlerden, seçilen zaman aralığına (1dk/5dk/15dk/30dk/1s) göre
+   "step" (son bilinen bakiyeyi tut) yöntemiyle örneklenmiş bir seri üretir —
+   borsa grafiklerindeki mum aralığı seçimine benzer şekilde. */
+function buildEquitySeries(intervalMinutes){
   const closed = trades
     .filter(t => t.durum === 'Kapalı' && t.pnl !== null && t.kapanis)
     .slice()
     .sort((a, b) => new Date(a.kapanis) - new Date(b.kapanis));
 
   const base = startBalance === null ? 0 : startBalance;
+
+  if(closed.length === 0){
+    return { points: [{ date: null, balance: base }], tradeCount: 0, capped: false };
+  }
+
   let running = base;
-  const points = [{ date: null, balance: base }];
-  closed.forEach(t => {
+  const events = closed.map(t => {
     running += t.pnl;
-    points.push({ date: t.kapanis, balance: running });
+    return { time: new Date(t.kapanis).getTime(), balance: running };
   });
-  return points;
+
+  const startTime = new Date(closed[0].kapanis).getTime();
+  const endTime = events[events.length - 1].time;
+  const rawSpan = endTime - startTime;
+
+  const stepMs = Math.max(1, intervalMinutes || 60) * 60000;
+  const MAX_POINTS = 1500;
+  let effectiveStep = stepMs;
+  if(rawSpan > 0 && rawSpan / stepMs > MAX_POINTS){
+    effectiveStep = Math.ceil(rawSpan / MAX_POINTS / stepMs) * stepMs;
+  }
+
+  const points = [{ date: new Date(startTime).toISOString(), balance: base }];
+
+  if(rawSpan <= 0){
+    // tüm kapanışlar aynı anda (ya da tek işlem): tek adımda son bakiyeye geç
+    points.push({ date: new Date(endTime).toISOString(), balance: events[events.length - 1].balance });
+  } else {
+    let eventIdx = 0;
+    let currentBalance = base;
+    let t = startTime;
+    while(t < endTime){
+      t = Math.min(t + effectiveStep, endTime);
+      while(eventIdx < events.length && events[eventIdx].time <= t){
+        currentBalance = events[eventIdx].balance;
+        eventIdx++;
+      }
+      points.push({ date: new Date(t).toISOString(), balance: currentBalance });
+    }
+    // son noktanın bakiyesi tam olarak son işlem sonrası bakiye olsun
+    points[points.length - 1].balance = events[events.length - 1].balance;
+  }
+
+  return { points, tradeCount: closed.length, capped: effectiveStep !== stepMs };
 }
 
 function renderEquityCurve(){
-  const points = buildEquitySeries();
+  const intervalMinutes = getEquityIntervalMinutes();
+  const { points, tradeCount, capped } = buildEquitySeries(intervalMinutes);
   const container = $('equityChartContainer');
 
   if(points.length <= 1){
@@ -1625,10 +1789,12 @@ function renderEquityCurve(){
   }
   $('equityEmptyState').style.display = 'none';
 
-  const firstDate = points[1].date;
+  const firstDate = points[0].date;
   const lastDate = points[points.length - 1].date;
   const fmtShort = (d) => new Date(d).toLocaleDateString('tr-TR', { day:'2-digit', month:'2-digit', year:'2-digit' });
-  $('equityRange').textContent = `${fmtShort(firstDate)} – ${fmtShort(lastDate)} · ${points.length - 1} kapanmış işlem`;
+  // Not: seçili aralık zaten altın renkle vurgulanan buton üzerinde görünüyor,
+  // burada tekrar yazmıyoruz — başlık satırını sade tutuyoruz.
+  $('equityRange').textContent = `${fmtShort(firstDate)} – ${fmtShort(lastDate)} · ${tradeCount} kapanmış işlem`;
 
   const w = 700, h = 220;
   const padL = 64, padR = 16, padT = 16, padB = 16;
@@ -1682,6 +1848,184 @@ function renderEquityCurve(){
   `;
 }
 
+(function initEquityIntervalButtons(){
+  const savedRaw = parseInt(localStorage.getItem(EQUITY_INTERVAL_KEY), 10);
+  const saved = EQUITY_INTERVALS.includes(savedRaw) ? savedRaw : 60;
+  const extraPanel = $('equityIntervalExtra');
+  const moreBtn = $('equityIntervalMoreBtn');
+
+  // Panel her sayfa yüklemesinde kapalı başlar (hatırlanmaz) — sadece kullanıcı
+  // o oturumda "Daha fazla"ya basarsa açılır.
+  let expanded = false;
+
+  function setExpanded(isOpen){
+    expanded = isOpen;
+    extraPanel.style.display = isOpen ? 'flex' : 'none';
+    moreBtn.textContent = isOpen ? 'Daha az ▲' : 'Daha fazla ▾';
+  }
+  setExpanded(expanded);
+  moreBtn.addEventListener('click', () => setExpanded(!expanded));
+
+  // Not: .equity-interval-btn sınıfı görsel tutarlılık için Coin Performansı
+  // araç çubuğunda da kullanılıyor — o yüzden burada seçimi equityBody ile
+  // sınırlıyoruz, yoksa oradaki butonlar da bu tıklama mantığını miras alır.
+  document.querySelectorAll('#equityBody .equity-interval-btn').forEach(btn => {
+    const min = parseInt(btn.dataset.min, 10);
+    btn.classList.toggle('active', min === saved);
+    btn.addEventListener('click', () => {
+      if(btn.classList.contains('active')) return;
+      document.querySelectorAll('#equityBody .equity-interval-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      localStorage.setItem(EQUITY_INTERVAL_KEY, String(min));
+      renderEquityCurve();
+    });
+  });
+})();
+
+/* ---------- Coin Performansı ---------- */
+const COINPERF_METRIC_KEY = 'pozisyon_defteri_coinperf_metric_v1';
+const COINPERF_SORT_KEY = 'pozisyon_defteri_coinperf_sort_v1';
+
+function getCoinPerfMetric(){
+  const v = localStorage.getItem(COINPERF_METRIC_KEY);
+  return v === 'roi' ? 'roi' : 'usd';
+}
+function getCoinPerfSort(){
+  const v = localStorage.getItem(COINPERF_SORT_KEY);
+  return v === 'asc' ? 'asc' : 'desc';
+}
+
+function renderCoinPerformance(){
+  const groups = {};
+  trades.forEach(t => {
+    if(!t.coin) return;
+    const key = t.coin.toUpperCase().trim();
+    if(!groups[key]){
+      groups[key] = { coin: key, totalCount: 0, closedCount: 0, openCount: 0, totalWon: 0, totalLost: 0, totalMargin: 0, winsLong: 0, winsShort: 0 };
+    }
+    const g = groups[key];
+    g.totalCount++;
+    if(t.durum === 'Açık') g.openCount++;
+    if(t.durum === 'Kapalı'){
+      g.closedCount++;
+      if(t.pnl !== null && t.pnl !== undefined){
+        if(t.pnl >= 0) g.totalWon += t.pnl;
+        else g.totalLost += Math.abs(t.pnl);
+        g.totalMargin += (t.teminat || 0);
+        if(t.pnl > 0){
+          if(t.yon === 'Long') g.winsLong++;
+          else if(t.yon === 'Short') g.winsShort++;
+        }
+      }
+    }
+  });
+
+  const list = Object.values(groups);
+  const container = $('coinPerfList');
+  const sub = $('coinPerfSub');
+
+  if(list.length === 0){
+    container.innerHTML = '';
+    $('coinPerfEmptyState').style.display = 'block';
+    sub.textContent = '—';
+    return;
+  }
+  $('coinPerfEmptyState').style.display = 'none';
+
+  list.forEach(g => {
+    g.netPnl = g.totalWon - g.totalLost;
+    g.roi = g.totalMargin > 0 ? (g.netPnl / g.totalMargin) * 100 : null;
+    g.wonRoi = g.totalMargin > 0 ? (g.totalWon / g.totalMargin) * 100 : 0;
+    g.lostRoi = g.totalMargin > 0 ? (g.totalLost / g.totalMargin) * 100 : 0;
+  });
+
+  const metric = getCoinPerfMetric();
+  const sortDir = getCoinPerfSort();
+  const sortVal = (g) => metric === 'roi' ? (g.roi === null ? -Infinity : g.roi) : g.netPnl;
+  list.sort((a, b) => sortDir === 'asc' ? sortVal(a) - sortVal(b) : sortVal(b) - sortVal(a));
+
+  // Tek yönlü, büyüklüğe göre uzayan bar: yeşil = net kâr, kırmızı = net zarar.
+  // Kazanç/kayıp ayrı ayrı değil, coin'in NET sonucu tek çubukta gösteriliyor —
+  // bu, önceki iki parçalı (ortadan ayrılan) çubuğa göre çok daha kolay okunuyor.
+  const maxAbs = metric === 'roi'
+    ? Math.max(1, ...list.map(g => Math.abs(g.roi || 0)))
+    : Math.max(1, ...list.map(g => Math.abs(g.netPnl)));
+
+  sub.textContent = `${list.length} coin · ${trades.length} işlem`;
+
+  container.innerHTML = list.map(g => {
+    const value = metric === 'roi' ? g.roi : g.netPnl;
+    const netClass = value === null ? 'zero' : (value > 0 ? 'pos' : (value < 0 ? 'neg' : 'zero'));
+    const netText = value === null
+      ? '—'
+      : metric === 'roi'
+        ? (value > 0 ? '+' : '') + value.toFixed(1) + '%'
+        : (value > 0 ? '+' : '') + fmtMoney(value);
+    const barPct = value === null ? 0 : Math.min(100, (Math.abs(value) / maxAbs) * 100);
+    let countText = g.openCount > 0 ? `${g.totalCount} işlem · ${g.openCount} açık` : `${g.totalCount} işlem`;
+    if(g.winsLong + g.winsShort > 0){
+      countText += ` · <span style="color:var(--long)">${g.winsLong}L</span>/<span style="color:var(--short)">${g.winsShort}S</span> kazanç`;
+    }
+    return `
+      <div class="coinperf-row">
+        <span class="coinperf-name">${g.coin}</span>
+        <span class="coinperf-count">${countText}</span>
+        <span class="coinperf-net ${netClass}">${netText}</span>
+        <div class="coinperf-bar-track">
+          <div class="coinperf-bar-fill ${netClass}" style="width:${barPct.toFixed(1)}%"></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+(function initCoinPerfToolbar(){
+  const metric = getCoinPerfMetric();
+  const sortDir = getCoinPerfSort();
+
+  document.querySelectorAll('#coinPerfMetricGroup .equity-interval-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.metric === metric);
+    btn.addEventListener('click', () => {
+      if(btn.classList.contains('active')) return;
+      document.querySelectorAll('#coinPerfMetricGroup .equity-interval-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      localStorage.setItem(COINPERF_METRIC_KEY, btn.dataset.metric);
+      renderCoinPerformance();
+    });
+  });
+
+  document.querySelectorAll('#coinPerfSortGroup .equity-interval-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.sort === sortDir);
+    btn.addEventListener('click', () => {
+      if(btn.classList.contains('active')) return;
+      document.querySelectorAll('#coinPerfSortGroup .equity-interval-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      localStorage.setItem(COINPERF_SORT_KEY, btn.dataset.sort);
+      renderCoinPerformance();
+    });
+  });
+})();
+
+/* Equity Curve ve Coin Performansı kartları ana sayfada yer kaplamasın diye
+   varsayılan olarak kapalı başlar; kullanıcının "Göster/Gizle" tercihi hatırlanır. */
+// Her sayfa yüklemesinde kapalı başlar (hatırlanmaz) — sadece kullanıcı o
+// oturumda "Göster"e basarsa açılır, "Gizle" ile tekrar kapanır.
+function initCollapsibleCard(bodyId, btnId){
+  const body = $(bodyId);
+  const btn = $(btnId);
+  let isOpen = false;
+  function apply(){
+    body.style.display = isOpen ? 'block' : 'none';
+    btn.textContent = isOpen ? 'Gizle' : 'Göster';
+  }
+  apply();
+  btn.addEventListener('click', () => {
+    isOpen = !isOpen;
+    apply();
+  });
+}
+initCollapsibleCard('equityBody', 'equityToggleBtn');
+initCollapsibleCard('coinPerfBody', 'coinPerfToggleBtn');
 
 function renderCalendar(){
   const map = dailyPnlMap();
@@ -1995,6 +2339,7 @@ function renderWatchList(){
     $('watchEmptyState').style.display = 'block';
     $('togglePendingBtn').style.display = 'none';
     $('watchActiveList').style.display = 'none';
+    $('watchSortRow').style.display = 'none';
     notifiedKeys = [];
     saveNotifiedKeys();
     return;
@@ -2004,7 +2349,10 @@ function renderWatchList(){
   let triggeredCount = 0;
   let pendingCount = 0;
 
-  items.forEach(item => {
+  // Önce her öğe için fiyat/tetiklenme durumunu hesapla, sonra seçili
+  // sıralamaya göre diz — böylece sıralama, hesaplanan yüzde farka göre
+  // yapılabiliyor.
+  const computed = items.map(item => {
     const price = livePrices[item.coin];
     let isTriggered = false;
     let diffPct = null;
@@ -2031,13 +2379,35 @@ function renderWatchList(){
       }
     }
 
+    return { item, price, isTriggered, diffPct, alertText };
+  });
+
+  const sortMode = $('watchSortSelect') ? $('watchSortSelect').value : 'deviation_asc';
+  computed.sort((a, b) => {
+    // Hedefe ulaşmış (tetiklenmiş) öğeler — susturulmuş olsalar bile — henüz
+    // ulaşmamış olanların her zaman ÜSTÜNDE gösterilir. İkisi de aynı
+    // durumdaysa (ikisi de tetiklenmiş ya da ikisi de beklemede) seçili
+    // sıralamaya (yakınlık/fark) göre kendi aralarında dizilirler.
+    if(a.isTriggered !== b.isTriggered) return a.isTriggered ? -1 : 1;
+    const da = a.diffPct === null ? Infinity : Math.abs(a.diffPct);
+    const db = b.diffPct === null ? Infinity : Math.abs(b.diffPct);
+    // 'proximity': hedefe en yakın (fark en küçük) önce.
+    // 'deviation' : hedeften en uzak (fark en büyük) önce.
+    return sortMode === 'deviation' ? (db - da) : (da - db);
+  });
+
+  computed.forEach(({ item, price, isTriggered, diffPct, alertText }) => {
     if(isTriggered){
-      triggeredCount++;
       stillNotified.push(item.key);
       if(!notifiedKeys.includes(item.key) && !item.muted) fireWatchNotification(item, price);
-    } else {
-      pendingCount++;
     }
+
+    // Bildirimi susturulmuş (Yoksay'a basılmış) bir öğe hedefe ulaşmış olsa
+    // bile üstteki öne çıkan kutuda kalmaz — "diğer coinler" (gizlenebilir)
+    // listesine düşer. Etiket/uyarı metni yine gösterilir, sadece kutunun
+    // dışına taşınır.
+    const showInTriggered = isTriggered && !item.muted;
+    if(showInTriggered) triggeredCount++; else pendingCount++;
 
     const metaText = item.source === 'auto'
       ? `Otomatik · ${item.yon} pozisyon girişi · Hedef: ${fmtPrice(item.target)}`
@@ -2053,7 +2423,7 @@ function renderWatchList(){
       : `<button class="btn-edit-ghost" onclick="toggleAutoWatchMute('${item.key.replace(/'/g, "\\'")}')">${item.muted ? 'Bildirimi Aç' : 'Yoksay'}</button>`;
 
     const row = document.createElement('div');
-    row.className = 'watch-item' + (isTriggered ? ' triggered' : '');
+    row.className = 'watch-item' + (showInTriggered ? ' triggered' : '');
     row.innerHTML = `
       <div class="watch-item-left">
         <span class="watch-item-coin">
@@ -2070,7 +2440,7 @@ function renderWatchList(){
       </div>
       ${isTriggered ? `<div class="watch-item-alert">⚠ ${alertText}</div>` : ''}
     `;
-    (isTriggered ? triggeredEl : activeEl).appendChild(row);
+    (showInTriggered ? triggeredEl : activeEl).appendChild(row);
   });
 
   $('watchEmptyState').style.display = triggeredCount === 0 ? 'block' : 'none';
@@ -2079,10 +2449,13 @@ function renderWatchList(){
   if(pendingCount > 0){
     toggleBtn.style.display = 'inline-block';
     const isOpen = $('watchActiveList').style.display !== 'none';
-    toggleBtn.textContent = (isOpen ? 'Gizle' : 'Göster') + ` — henüz ulaşmayan ${pendingCount} coin`;
+    toggleBtn.textContent = (isOpen ? 'Gizle' : 'Göster') + ` — diğer ${pendingCount} coin`;
+    // Sıralama kutusu sadece "Göster"e basılıp liste açıldığında görünür.
+    $('watchSortRow').style.display = isOpen ? 'block' : 'none';
   } else {
     toggleBtn.style.display = 'none';
     $('watchActiveList').style.display = 'none';
+    $('watchSortRow').style.display = 'none';
   }
 
   notifiedKeys = stillNotified;
@@ -2093,6 +2466,19 @@ $('togglePendingBtn').addEventListener('click', () => {
   const activeEl = $('watchActiveList');
   const isOpen = activeEl.style.display !== 'none';
   activeEl.style.display = isOpen ? 'none' : 'block';
+  $('watchSortRow').style.display = isOpen ? 'none' : 'block';
+  renderWatchList();
+});
+
+const WATCH_SORT_KEY = 'pozisyon_defteri_watch_sort_v1';
+// 'proximity' seçeneği kaldırıldı (Küçükten Büyüğe ile aynı işlevi görüyordu) —
+// eski kayıtlı tercih 'proximity' ise onun karşılığı olan 'deviation_asc'e taşıyoruz.
+{
+  const storedSort = localStorage.getItem(WATCH_SORT_KEY);
+  $('watchSortSelect').value = (storedSort === 'proximity' || !storedSort) ? 'deviation_asc' : storedSort;
+}
+$('watchSortSelect').addEventListener('change', () => {
+  localStorage.setItem(WATCH_SORT_KEY, $('watchSortSelect').value);
   renderWatchList();
 });
 
